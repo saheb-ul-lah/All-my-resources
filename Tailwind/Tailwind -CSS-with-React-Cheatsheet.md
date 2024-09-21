@@ -334,5 +334,3 @@ If you need to enforce styles:
 ```
 
 ---
-
-By following this **detailed README-style cheatsheet**, you will have a comprehensive guide to using **Tailwind CSS with React**. This document aims to provide clarity and guidance, making it easier for you and others transitioning from regular CSS. Happy coding!
