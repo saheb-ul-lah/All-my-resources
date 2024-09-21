@@ -1,6 +1,15 @@
 ---
 
 # **Shadcn UI Cheatsheet**
+#Reference:
+```bash
+https://ui.shadcn.com/docs/installation/vite
+```
+
+#Issues that may arise:
+```bash
+https://stackoverflow.com/questions/78934468/shadcn-ui-commands-on-terminal-is-not-working
+```
 
 Welcome to your ultimate guide for integrating **Shadcn UI** into your React projects! This cheatsheet provides a step-by-step approach to help you understand and utilize Shadcn UI effectively.
 
