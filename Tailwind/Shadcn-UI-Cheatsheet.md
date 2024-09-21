@@ -4,7 +4,7 @@
 
 Welcome to your ultimate guide for integrating **Shadcn UI** into your React projects! This cheatsheet provides a step-by-step approach to help you understand and utilize Shadcn UI effectively.
 
-## **1. Introduction to Shadcn UI**
+# **1. Introduction to Shadcn UI**
 
 **Shadcn UI** is a React component library that offers a collection of customizable components built with Tailwind CSS. It provides a modern design system, making it easy to create beautiful interfaces.
 
