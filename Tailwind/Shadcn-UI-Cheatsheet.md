@@ -1,6 +1,6 @@
 ---
 
-# **Shadcn UI Cheatsheet**
+ **Shadcn UI Cheatsheet**
 #Reference:
 ```bash
 https://ui.shadcn.com/docs/installation/vite
