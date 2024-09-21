@@ -4,23 +4,29 @@
 
 Welcome to your ultimate guide for integrating **Shadcn UI** into your React projects! This cheatsheet provides a step-by-step approach to help you understand and utilize Shadcn UI effectively.
 
- **1. Introduction to Shadcn UI**
+---
 
-**Shadcn UI** is a React component library that offers a collection of customizable components built with Tailwind CSS. It provides a modern design system, making it easy to create beautiful interfaces.
+## **1. Introduction to Shadcn UI**
+
+**Shadcn UI** is a React component library that offers a collection of customizable components built with Tailwind CSS, enabling the creation of modern and beautiful interfaces.
+
+---
 
 ## **2. Installation**
 
 ### **Install Shadcn UI**
-To start using Shadcn UI, you first need to install it. Run the following command:
+To start using Shadcn UI, run the following command:
 ```bash
-npm install @shadcn/ui
+npm install shadcn
 ```
 
 ### **Install Peer Dependencies**
-Ensure that you have Tailwind CSS and its dependencies set up as well:
+Ensure that you have Tailwind CSS and its dependencies set up:
 ```bash
 npm install tailwindcss postcss autoprefixer
 ```
+
+---
 
 ## **3. Setup and Configuration**
 
@@ -60,11 +66,18 @@ import './styles/globals.css';
 ### **Importing Components**
 Shadcn UI offers a variety of components. Here’s how to use a button:
 ```jsx
-import { Button } from '@shadcn/ui';
+import './App.css';
+import './globals.css';
+import { Button } from './components/ui/button'; // Updated import
 
 const App = () => (
-  <Button variant="primary">Click Me</Button>
+  <div className="text-center mt-5">
+    <Button>Click Me</Button>
+    <h1>Hello world!</h1>
+  </div>
 );
+
+export default App;
 ```
 
 ### **Button Variants**
@@ -108,9 +121,9 @@ module.exports = {
 ## **6. Layout Components**
 
 ### **Grid Layouts**
-Shadcn UI allows you to create grid layouts easily:
+Create grid layouts easily:
 ```jsx
-import { Grid } from '@shadcn/ui';
+import { Grid } from './components/ui/grid'; // Example import
 
 const App = () => (
   <Grid>
@@ -121,7 +134,7 @@ const App = () => (
 ```
 
 ### **Flexbox Layout**
-You can also utilize flex properties:
+Utilize flex properties:
 ```jsx
 <div className="flex space-x-4">
   <Button>Button 1</Button>
@@ -134,9 +147,9 @@ You can also utilize flex properties:
 ## **7. Forms and Inputs**
 
 ### **Input Components**
-Use Shadcn UI input components for forms:
+Use input components for forms:
 ```jsx
-import { Input } from '@shadcn/ui';
+import { Input } from './components/ui/input';
 
 const Form = () => (
   <form>
@@ -159,7 +172,7 @@ Handle validation states using props:
 ### **Creating a Modal**
 Shadcn UI provides a simple modal component:
 ```jsx
-import { Modal } from '@shadcn/ui';
+import { Modal } from './components/ui/modal'; // Example import
 
 const App = () => (
   <Modal>
@@ -177,9 +190,9 @@ const App = () => (
 ## **9. Toast Notifications**
 
 ### **Implementing Toasts**
-Shadcn UI makes it easy to show toast notifications:
+Easily show toast notifications:
 ```jsx
-import { Toast } from '@shadcn/ui';
+import { Toast } from './components/ui/toast'; // Example import
 
 const notify = () => {
   Toast.success("Your action was successful!");
@@ -191,7 +204,7 @@ const notify = () => {
 ## **10. Responsive Design**
 
 ### **Responsive Utilities**
-Utilize responsive classes for your components:
+Utilize responsive classes:
 ```jsx
 <Button className="w-full md:w-1/2">Responsive Button</Button>
 ```
@@ -204,7 +217,7 @@ Shadcn UI components are responsive by default. Adjust layouts as needed using T
 ## **11. Accessibility Features**
 
 ### **ARIA Attributes**
-Shadcn UI components are built with accessibility in mind. Use ARIA attributes when necessary:
+Use ARIA attributes when necessary:
 ```jsx
 <Button aria-label="Close Modal">X</Button>
 ```
@@ -214,13 +227,13 @@ Shadcn UI components are built with accessibility in mind. Use ARIA attributes w
 ## **12. Customizing Components**
 
 ### **Styling Props**
-You can pass additional styles using the `className` prop:
+Pass additional styles using the `className` prop:
 ```jsx
 <Button className="bg-red-500">Custom Style Button</Button>
 ```
 
 ### **Using Slots for Customization**
-Shadcn UI allows customization using slots:
+Allow for additional customization using slots:
 ```jsx
 <Button>
   <span>Custom Text</span>
@@ -233,7 +246,7 @@ Shadcn UI allows customization using slots:
 ## **13. Advanced Features**
 
 ### **Combining Components**
-You can combine different components to create complex UI elements:
+Combine different components to create complex UI elements:
 ```jsx
 <Modal>
   <Modal.Header>
@@ -248,7 +261,7 @@ You can combine different components to create complex UI elements:
 ### **Theming with Context**
 Set up a theme context for global styles:
 ```jsx
-import { ThemeProvider } from '@shadcn/ui';
+import { ThemeProvider } from './components/ui/theme-provider'; // Example import
 
 const App = () => (
   <ThemeProvider>
@@ -266,7 +279,7 @@ const App = () => (
 - **Component Not Rendering**: Verify that the component is correctly imported from Shadcn UI.
 
 ### **Best Practices**
-- **Use PropTypes**: Validate props using PropTypes to ensure correct usage.
+- **Use PropTypes**: Validate props using PropTypes for correct usage.
 - **Modular Components**: Keep components modular for easier maintenance and testing.
 
 ---
@@ -275,4 +288,4 @@ const App = () => (
 
 This cheatsheet provides a comprehensive overview of using **Shadcn UI** in your React projects. With the combination of Tailwind CSS and Shadcn UI, you can create stunning, responsive interfaces efficiently.
 
----
+--- 
