@@ -5,7 +5,7 @@
 ## 🌐 Types of Databases
 ### 1. **Relational Databases (RDBMS)**
    - **Definition**: In relational databases, data is stored in tables, where each table has rows and columns. Each row represents a record, and each column represents an attribute of the data.
-   - **Examples**: MySQL, PostgreSQL, SQL Server.
+   - **Examples**: `MySQL`, `PostgreSQL`, `SQL Server`.
    - **Analogy**: Imagine you’re keeping records of books in a library. Each book has a record (row) in a table, and each detail of the book (title, author, ISBN) is stored in columns.
    - **Key Terms**:
      - **Table**: A collection of related data (e.g., `books`, `authors`).
@@ -17,12 +17,12 @@
 ### 2. **NoSQL Databases**
    - **Definition**: NoSQL databases store data in formats other than traditional rows and columns. They're designed for flexibility and scalability, handling large amounts of unstructured data.
    - **Types**:
-     - **Document-based** (MongoDB): Stores data in flexible, JSON-like documents.
-     - **Key-Value Stores** (Redis): Data stored as key-value pairs (like a dictionary).
-     - **Column Family Stores** (Cassandra): Data stored in column families, designed for large-scale queries.
-     - **Graph Databases** (Neo4j): Data is stored as nodes and edges, useful for social networks or relationship-driven data.
+     - **Document-based** (`MongoDB`): Stores data in flexible, JSON-like documents.
+     - **Key-Value Stores** (`Redis`): Data stored as key-value pairs (like a dictionary).
+     - **Column Family Stores** (`Cassandra`): Data stored in column families, designed for large-scale queries.
+     - **Graph Databases** (`Neo4j`): Data is stored as nodes and edges, useful for social networks or relationship-driven data.
    - **Analogy**: Think of NoSQL as a collection of flexible filing cabinets. Each cabinet (collection) can hold papers (documents) of different formats. You can easily add or remove fields (data) without affecting the other papers.
-   - **Examples**: MongoDB, Cassandra, Redis.
+   - **Examples**: `MongoDB`, `Cassandra`, `Redis`.
 
 ---
 
