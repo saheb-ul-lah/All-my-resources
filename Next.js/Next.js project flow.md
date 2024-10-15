@@ -1,4 +1,3 @@
----
 
 ### **Full Stack Blog App (Next.js with MongoDB)**
 
