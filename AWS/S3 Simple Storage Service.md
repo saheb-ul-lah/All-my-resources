@@ -1,4 +1,3 @@
----
 
 # 📂 Amazon S3 Comprehensive Guide with Prerequisites
 
