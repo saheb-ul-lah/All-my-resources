@@ -3,7 +3,6 @@
 # 📚 Comprehensive DBMS Cheatsheet with Analogies
 
 ## 🌐 Types of Databases
-
 ### 1. **Relational Databases (RDBMS)**
    - **Definition**: In relational databases, data is stored in tables, where each table has rows and columns. Each row represents a record, and each column represents an attribute of the data.
    - **Examples**: MySQL, PostgreSQL, SQL Server.
