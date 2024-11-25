@@ -1,5 +1,3 @@
-Below is a complete `README.md` file for the Northwest Corner Method program written in C.
-
 ```markdown
 # Northwest Corner Method (NWC) in C
 
@@ -206,9 +204,4 @@ int main() {
 - Ensure the total supply equals the total demand; otherwise, you may need to add a dummy row/column with zero cost.
 - This program assumes integer values for simplicity. Modify as needed for floating-point costs.
 
----
-
-## License
-
-This project is open-source and available under the MIT License.
 ```
