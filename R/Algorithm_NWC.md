@@ -1,4 +1,3 @@
-```markdown
 # Northwest Corner Method (NWC) in C
 
 ## Overview
