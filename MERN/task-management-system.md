@@ -505,4 +505,379 @@ We’ve set up the basic structure of our **Task Management System**, including:
 2. **Authentication**: User registration and login with JWT.
 3. **Frontend**: A simple React app with a login form.
 
-In the next steps, we’ll add CRUD operations, file uploads, payment integration, and AI features. Let me know if you have any questions so far! 🚀
+Let’s continue building the project step by step, and I’ll explain everything in detail, including:
+
+1. **Advanced Backend Routes**: CRUD operations, file uploads, payment integration, and AI features.
+2. **Frontend Components**: State management, routing, forms, and API integration.
+3. **Database Connectivity**: How MongoDB works, how to design schemas, and how to query data.
+4. **Error Handling**: How to handle errors gracefully in both the frontend and backend.
+5. **Deployment**: How to deploy the app to the cloud.
+
+---
+
+## **Step 8: Advanced Backend Development**
+
+### **8.1 Task Model**
+
+Let’s create a `Task` model to store tasks in the database. In `backend/models/Task.js`, add:
+
+```javascript
+// backend/models/Task.js
+
+const mongoose = require('mongoose');
+
+// Define the task schema
+const taskSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String },
+  completed: { type: Boolean, default: false },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Associate tasks with users
+  file: { type: String }, // Store file path for uploaded files
+});
+
+// Create the Task model
+const Task = mongoose.model('Task', taskSchema);
+
+module.exports = Task;
+```
+
+#### **Explanation:**
+
+- **title**: The title of the task (required).
+- **description**: A description of the task (optional).
+- **completed**: A boolean to track if the task is completed (default: `false`).
+- **user**: A reference to the `User` who created the task (required).
+- **file**: A field to store the file path if a file is uploaded.
+
+---
+
+### **8.2 Task Routes**
+
+Now, let’s create routes for CRUD operations on tasks. In `backend/routes/task.js`, add:
+
+```javascript
+// backend/routes/task.js
+
+const express = require('express');
+const router = express.Router();
+const Task = require('../models/Task');
+const auth = require('../middleware/auth'); // Middleware for authentication
+
+// Create a new task
+router.post('/', auth, async (req, res) => {
+  const { title, description } = req.body;
+  try {
+    const task = new Task({ title, description, user: req.userId });
+    await task.save();
+    res.status(201).json(task);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Get all tasks for the logged-in user
+router.get('/', auth, async (req, res) => {
+  try {
+    const tasks = await Task.find({ user: req.userId });
+    res.json(tasks);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Update a task
+router.put('/:id', auth, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const task = await Task.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(task);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Delete a task
+router.delete('/:id', auth, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Task.findByIdAndDelete(id);
+    res.json({ message: 'Task deleted successfully' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+module.exports = router;
+```
+
+#### **Explanation:**
+
+- **POST /**: Creates a new task. The `auth` middleware ensures only logged-in users can create tasks.
+- **GET /**: Fetches all tasks for the logged-in user.
+- **PUT /:id**: Updates a task by ID.
+- **DELETE /:id**: Deletes a task by ID.
+
+---
+
+### **8.3 File Uploads**
+
+Let’s add file upload functionality using **Multer**. In `backend/routes/upload.js`, add:
+
+```javascript
+// backend/routes/upload.js
+
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const Task = require('../models/Task');
+const auth = require('../middleware/auth');
+
+// Configure Multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+// Upload a file and associate it with a task
+router.post('/:taskId', auth, upload.single('file'), async (req, res) => {
+  const { taskId } = req.params;
+  try {
+    const task = await Task.findById(taskId);
+    if (!task) throw new Error('Task not found');
+    task.file = req.file.path;
+    await task.save();
+    res.json(task);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+module.exports = router;
+```
+
+#### **Explanation:**
+
+- **Multer**: Handles file uploads and saves files to the `uploads/` folder.
+- **POST /:taskId**: Uploads a file and associates it with a specific task.
+
+---
+
+### **8.4 Payment Integration**
+
+Let’s integrate **Stripe** for payments. In `backend/routes/payment.js`, add:
+
+```javascript
+// backend/routes/payment.js
+
+const express = require('express');
+const router = express.Router();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+// Create a payment intent
+router.post('/create-payment-intent', async (req, res) => {
+  const { amount } = req.body;
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: 'usd',
+    });
+    res.json({ clientSecret: paymentIntent.client_secret });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+module.exports = router;
+```
+
+#### **Explanation:**
+
+- **POST /create-payment-intent**: Creates a payment intent using Stripe. The frontend will use the `clientSecret` to complete the payment.
+
+---
+
+### **8.5 AI Integration**
+
+Let’s integrate **OpenAI** to generate task summaries. In `backend/routes/ai.js`, add:
+
+```javascript
+// backend/routes/ai.js
+
+const express = require('express');
+const router = express.Router();
+const OpenAI = require('openai');
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Generate a task summary using OpenAI
+router.post('/generate-summary', async (req, res) => {
+  const { taskDescription } = req.body;
+  try {
+    const response = await openai.completions.create({
+      model: 'text-davinci-003',
+      prompt: `Summarize the following task: ${taskDescription}`,
+      max_tokens: 50,
+    });
+    res.json({ summary: response.choices[0].text });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+module.exports = router;
+```
+
+#### **Explanation:**
+
+- **POST /generate-summary**: Uses OpenAI’s API to generate a summary of the task description.
+
+---
+
+## **Step 9: Frontend Development**
+
+### **9.1 Task List Component**
+
+Let’s create a component to display tasks. In `frontend/src/components/TaskList.jsx`, add:
+
+```jsx
+// frontend/src/components/TaskList.jsx
+
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const TaskList = () => {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5000/api/tasks', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTasks(response.data);
+    };
+    fetchTasks();
+  }, []);
+
+  return (
+    <ul>
+      {tasks.map((task) => (
+        <li key={task._id}>
+          <h3>{task.title}</h3>
+          <p>{task.description}</p>
+          {task.file && <a href={`http://localhost:5000/${task.file}`}>Download File</a>}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default TaskList;
+```
+
+#### **Explanation:**
+
+- Fetches tasks from the backend and displays them.
+- Includes a link to download uploaded files.
+
+---
+
+### **9.2 Add Task Form**
+
+Let’s create a form to add tasks. In `frontend/src/components/AddTaskForm.jsx`, add:
+
+```jsx
+// frontend/src/components/AddTaskForm.jsx
+
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const AddTaskForm = () => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        'http://localhost:5000/api/tasks',
+        { title, description },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert('Task created successfully!');
+    } catch (err) {
+      alert('Failed to create task');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <textarea
+        placeholder="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
+      <button type="submit">Add Task</button>
+    </form>
+  );
+};
+
+export default AddTaskForm;
+```
+
+#### **Explanation:**
+
+- Allows users to create new tasks.
+
+---
+
+## **Step 10: Full-Stack Integration**
+
+### **10.1 Connect Frontend and Backend**
+
+Update `frontend/src/App.js` to include the `TaskList` and `AddTaskForm` components:
+
+```jsx
+// frontend/src/App.js
+
+import React from 'react';
+import TaskList from './components/TaskList';
+import AddTaskForm from './components/AddTaskForm';
+
+function App() {
+  return (
+    <div className="App">
+      <h1>Task Management System</h1>
+      <AddTaskForm />
+      <TaskList />
+    </div>
+  );
+}
+
+export default App;
+```
+
+---
+
+## **Step 11: Conclusion**
+
+We’ve now built a **complete Task Management System** with:
+
+1. **Authentication**: User registration and login.
+2. **CRUD Operations**: Create, read, update, and delete tasks.
+3. **File Uploads**: Upload and download files.
+4. **Payment Integration**: Stripe for payments.
+5. **AI Integration**: OpenAI for task summaries.
