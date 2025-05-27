@@ -937,3 +937,430 @@ This covers the foundational DDL, DML, DQL, TCL, and DCL commands. I've tried to
     *   Insert a new intern record.
     *   If the new intern's `start_date` is before '2023-01-01', rollback the transaction. Otherwise, commit.
     *   Check the `Interns` table to see the result.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Now moving into **scalar functions** (also called **single-row functions**), which are **not aggregate functions** — instead, they work on **individual rows or values**, not on a group.
+
+---
+
+## 🔠 1. **String Functions**
+
+These work on text (VARCHAR, CHAR, TEXT).
+
+| Function                                      | Description                           | Example Result                     |
+| --------------------------------------------- | ------------------------------------- | ---------------------------------- |
+| `SUBSTRING(str, start, length)` or `SUBSTR()` | Extract part of a string              | `SUBSTRING('hello', 2, 3)` → `ell` |
+| `LENGTH(str)`                                 | Number of characters/bytes in string  | 5                                  |
+| `LOWER(str)`                                  | Convert to lowercase                  | `hello`                            |
+| `UPPER(str)`                                  | Convert to uppercase                  | `HELLO`                            |
+| `TRIM(str)`                                   | Remove spaces from both sides         | `hello`                            |
+| `LTRIM(str)`                                  | Remove left-side spaces               | `hello`                            |
+| `RTRIM(str)`                                  | Remove right-side spaces              | `hello`                            |
+| `CONCAT(str1, str2)`                          | Join strings                          | `hello world`                      |
+| `REPLACE(str, from, to)`                      | Replace part of string                | `heLLo` → `heXXo`                  |
+| `INSTR(str, sub)`                             | Position of substring (1-based index) | 3                                  |
+| `LEFT(str, n)`                                | First n characters                    | `he`                               |
+| `RIGHT(str, n)`                               | Last n characters                     | `lo`                               |
+| `REVERSE(str)`                                | Reverse the string                    | `olleh`                            |
+
+---
+
+## 🔢 2. **Math/Numeric Functions**
+
+These work on numbers.
+
+| Function                      | Description                    | Example Result             |
+| ----------------------------- | ------------------------------ | -------------------------- |
+| `ROUND(num, decimals)`        | Round number to given decimals | `ROUND(5.678, 2)` → `5.68` |
+| `FLOOR(num)`                  | Largest integer ≤ num          | 5                          |
+| `CEIL(num)` or `CEILING(num)` | Smallest integer ≥ num         | 6                          |
+| `ABS(num)`                    | Absolute value                 | 5                          |
+| `POWER(x, y)` or `POW()`      | x raised to the power y        | `2^3 = 8`                  |
+| `MOD(x, y)` or `%`            | Modulo (remainder)             | `10 % 3 = 1`               |
+| `SQRT(x)`                     | Square root                    | `√9 = 3`                   |
+| `RAND()`                      | Random number between 0 and 1  | 0.5731                     |
+| `SIGN(x)`                     | -1 if x<0, 0 if x=0, 1 if x>0  | 1                          |
+
+---
+
+## 📆 3. **Date & Time Functions**
+
+Work with dates and times.
+
+| Function                          | Description                 | Example Result        |
+| --------------------------------- | --------------------------- | --------------------- |
+| `CURDATE()`                       | Current date (YYYY-MM-DD)   | `2025-05-26`          |
+| `NOW()`                           | Current date and time       | `2025-05-26 14:30:00` |
+| `YEAR(date)`                      | Extract year                | 2025                  |
+| `MONTH(date)`                     | Extract month               | 5                     |
+| `DAY(date)`                       | Extract day                 | 26                    |
+| `DATE_ADD(date, INTERVAL x UNIT)` | Add interval to date        | `+ 5 DAYS`            |
+| `DATE_SUB(date, INTERVAL x UNIT)` | Subtract interval from date | `- 1 MONTH`           |
+| `DATEDIFF(date1, date2)`          | Days between two dates      | 10                    |
+| `STR_TO_DATE(str, format)`        | Convert string to date      | `'2024-12-25'`        |
+| `DATE_FORMAT(date, format)`       | Format a date               | `'25 Dec 2024'`       |
+
+---
+
+## 🔄 4. **Control/Conversion Functions**
+
+| Function              | Description                     | Example Result                 |
+| --------------------- | ------------------------------- | ------------------------------ |
+| `IF(condition, a, b)` | If condition true → a, else → b | `IF(1=1, 'Yes', 'No')` → `Yes` |
+| `IFNULL(a, b)`        | If `a` is NULL, return `b`      | `IFNULL(NULL, 'N/A')` → `N/A`  |
+| `NULLIF(a, b)`        | Returns NULL if a = b, else a   | `NULLIF(5, 5)` → `NULL`        |
+| `CAST(expr AS TYPE)`  | Convert value to another type   | `CAST('5' AS INT)` → 5         |
+| `CONVERT(expr, TYPE)` | Same as CAST (MySQL)            |                                |
+
+---
+
+## 🎯 Practical Examples
+
+```sql
+SELECT
+  UPPER(name) AS uppercase_name,
+  ROUND(salary / 12, 2) AS monthly_salary,
+  DATE_FORMAT(join_date, '%d %b %Y') AS formatted_date
+FROM employees;
+```
+
+---
+
+## ✅ Summary Mind Map
+
+```
+String      → SUBSTRING, CONCAT, UPPER, LOWER, LENGTH
+Math        → ROUND, FLOOR, CEIL, ABS, POWER, MOD
+Date/Time   → NOW, CURDATE, YEAR, DATE_ADD, DATEDIFF
+Conversion  → IF, IFNULL, CAST, CONVERT, NULLIF
+```
+
+
+
+---
+
+# ✅ SQL `LIKE` Operator — Pattern Matching Guide
+
+---
+
+## 🔹 What is `LIKE`?
+
+`LIKE` is used in SQL to **search for a specified pattern** in a column using **wildcards**.
+
+---
+
+## 🔑 Syntax:
+
+```sql
+SELECT column1, column2
+FROM table_name
+WHERE column_name LIKE 'pattern';
+```
+
+---
+
+## 🎯 Main Wildcards in LIKE:
+
+| Wildcard | Meaning                           |
+| -------- | --------------------------------- |
+| `%`      | **Zero, one, or many characters** |
+| `_`      | **Exactly one character**         |
+
+---
+
+## 🧪 Examples with `%` (multi-character match):
+
+### 1. Starts with something
+
+```sql
+SELECT * FROM employees WHERE name LIKE 'A%';
+```
+
+➡ Matches: "Alice", "Andrew", "Amit", but **not** "Sam"
+
+---
+
+### 2. Ends with something
+
+```sql
+SELECT * FROM employees WHERE name LIKE '%son';
+```
+
+➡ Matches: "Jackson", "Emerson", but **not** "Samuel"
+
+---
+
+### 3. Contains something (anywhere)
+
+```sql
+SELECT * FROM employees WHERE name LIKE '%li%';
+```
+
+➡ Matches: "Alice", "Charlie", but **not** "Ben"
+
+---
+
+## 🧪 Examples with `_` (single-character match):
+
+### 1. Exactly 4 letters, starting with 'J'
+
+```sql
+SELECT * FROM employees WHERE name LIKE 'J___';
+```
+
+➡ Matches: "Jack", "John", "Jane"
+
+---
+
+### 2. Second letter is 'a'
+
+```sql
+SELECT * FROM employees WHERE name LIKE '_a%';
+```
+
+➡ Matches: "Sam", "Jack", "Max", but not "Ben"
+
+---
+
+## 📌 Combining `%` and `_`:
+
+```sql
+SELECT * FROM books WHERE title LIKE '_at%';
+```
+
+➡ Matches: "Cat", "Rate", "Batch", etc. (must have 'a' as 2nd and 't' as 3rd letter)
+
+---
+
+## ⚠ Case Sensitivity
+
+* **MySQL**: Case-insensitive by default (unless using binary collation).
+* **PostgreSQL**: Case-sensitive by default.
+* Use `ILIKE` in PostgreSQL for case-insensitive search.
+
+---
+
+## 🔄 Opposite of `LIKE`: Use `NOT LIKE`
+
+```sql
+SELECT * FROM users WHERE username NOT LIKE 'admin%';
+```
+
+---
+
+## 🧱 Escape Special Characters (`%`, `_`)
+
+To match a literal `%` or `_`, use `ESCAPE`:
+
+```sql
+SELECT * FROM files WHERE name LIKE '%\%%' ESCAPE '\';
+```
+
+---
+
+## 📋 Practical Use Cases
+
+| Use Case                                   | Example                          |
+| ------------------------------------------ | -------------------------------- |
+| Search all emails ending with `@gmail.com` | `WHERE email LIKE '%@gmail.com'` |
+| Find names with 'an' in them               | `WHERE name LIKE '%an%'`         |
+| Names starting with capital 'A'            | `WHERE name LIKE 'A%'`           |
+| 5-letter usernames                         | `WHERE username LIKE '_____'`    |
+
+---
+
+## 🧠 Tips to Master LIKE
+
+* `%` is greedy: it matches **any number of characters**, including zero.
+* `_` is precise: it matches **one and only one character**.
+* Combine both for complex patterns.
+* Use `ESCAPE` when searching for wildcards as **literal characters**.
+* Use `LOWER()` or `UPPER()` for consistent case-insensitive searches in SQL engines that are case-sensitive:
+
+```sql
+WHERE LOWER(name) LIKE 'a%'
+```
+
+---
+
+## 🧾 Summary Table:
+
+| Pattern  | Matches                         |
+| -------- | ------------------------------- |
+| `'A%'`   | Strings starting with "A"       |
+| `'%son'` | Strings ending with "son"       |
+| `'%in%'` | Strings containing "in"         |
+| `'____'` | Any 4-character string          |
+| `'B_o%'` | Strings where 2nd letter is 'o' |
+
+---
+
+# ✅ `DECIMAL(12,2)` — Full Explanation
+
+This is a **fixed-point numeric data type** used in SQL to **store exact numeric values**, especially for **money, financial, or budget-related fields**.
+
+---
+
+## 🔢 Syntax:
+
+```sql
+DECIMAL(precision, scale)
+```
+
+* `precision` → Total number of **digits** (before + after the decimal point).
+* `scale` → Number of **digits after the decimal point** (i.e., decimal places).
+
+---
+
+## 🧠 So, `DECIMAL(12,2)` means:
+
+| Component | Value     | Meaning                                                         |
+| --------- | --------- | --------------------------------------------------------------- |
+| `12`      | Precision | Total of **12 digits**, including digits before & after decimal |
+| `2`       | Scale     | **2 digits after** the decimal point                            |
+
+### ➕ That means:
+
+* **Up to 10 digits before** the decimal (because 12 - 2 = 10)
+* **Exactly 2 digits after** the decimal
+
+---
+
+## 🔍 Examples of valid values for `DECIMAL(12,2)`:
+
+| Value             | Valid? | Why?                                    |
+| ----------------- | ------ | --------------------------------------- |
+| `1234567890.12`   | ✅      | 10 digits before + 2 after = 12 total   |
+| `0.01`            | ✅      | 0 before, 2 after = OK                  |
+| `100000000000.00` | ❌      | 12 digits before decimal = too big      |
+| `123.456`         | ❌      | 3 digits after decimal — violates scale |
+
+---
+
+## 💡 Why use `DECIMAL(12,2)` instead of FLOAT or DOUBLE?
+
+| Feature  | DECIMAL                   | FLOAT/DOUBLE             |
+| -------- | ------------------------- | ------------------------ |
+| Accuracy | Exact (perfect for money) | Approximate (may round)  |
+| Storage  | Uses more space           | More compact             |
+| Use Case | Money, Prices, Budgets    | Scientific calcs, Speed  |
+| Example  | Budget, salary            | Temperature, coordinates |
+
+---
+
+## 📦 Storage Info (MySQL Example)
+
+* The storage required for `DECIMAL` depends on the precision.
+* MySQL uses roughly:
+
+  * 4 bytes for every 9 digits.
+  * So `DECIMAL(12,2)` = needs \~5–6 bytes.
+
+(You don’t need to worry about this in most cases unless optimizing performance.)
+
+---
+
+## 🔐 Constraints with `DECIMAL(12,2)`:
+
+* If you insert a value **with more than 2 decimal places**, it will round or throw error based on the SQL engine.
+
+  ```sql
+  INSERT INTO budgets (amount) VALUES (123.456);  -- becomes 123.46
+  ```
+* Values outside of allowed range (more than 10 digits before decimal) will raise errors.
+
+---
+
+## 🧾 Practical Examples:
+
+```sql
+CREATE TABLE budgets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    department VARCHAR(100),
+    budget DECIMAL(12,2)
+);
+```
+
+### ➕ Sample inserts:
+
+```sql
+INSERT INTO budgets (department, budget) VALUES ('HR', 1200000.50);
+INSERT INTO budgets (department, budget) VALUES ('IT', 9876543210.99); -- valid
+```
+
+---
+
+## 🧠 Remember:
+
+> `DECIMAL(12,2)` = Max 9999999999.99
+
+Because:
+
+* Max 10 digits before decimal → `9999999999`
+* Exactly 2 digits after decimal → `.99`
+
+---
+
+
+
+### The SQL column definition flow.
+
+---
+
+
+
+### 🔤 Flow :
+
+```
+column_name 
+→ data_type (e.g., INT, VARCHAR(n), ENUM(...)) 
+→ AUTO_INCREMENT (only for integers) 
+→ PRIMARY KEY (if applicable) 
+→ NOT NULL 
+→ UNIQUE 
+→ DEFAULT value 
+→ CHECK (optional) 
+→ REFERENCES (if foreign key)
+```
+
+---
+
+
+
+### 🧠 Mnemonic update (with ENUM included):
+
+> "**C**ats **D**rink **A**pple **P**ie **N**ightly, **U**nless **D**ogs **C**rash **R**oofs"
+
+* **C** = Column Name
+* **D** = Data Type (`INT`, `VARCHAR`, `ENUM`, etc.)
+* **A** = AUTO\_INCREMENT
+* **P** = PRIMARY KEY
+* **N** = NOT NULL
+* **U** = UNIQUE
+* **D** = DEFAULT
+* **C** = CHECK
+* **R** = REFERENCES
+
+---
