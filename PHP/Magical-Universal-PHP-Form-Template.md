@@ -6,7 +6,6 @@
 
 Welcome to the **Magical Universal PHP Form Template**! This project provides a comprehensive, beginner-friendly template to handle any kind of form submission in PHP. It supports various form elements including text inputs, file uploads, checkboxes, radio buttons, dropdowns, and much more.
 
-The template also handles reserved SQL keywords, file uploads, and database operations while ensuring security through parameterized queries.
 
 ## Features
 
