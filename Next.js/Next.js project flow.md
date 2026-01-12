@@ -1,8 +1,7 @@
 
 ### **Full Stack Blog App (Next.js with MongoDB)**
 
-We will build a **Blog App** with user authentication (login, signup) and CRUD (Create, Read, Update, Delete) operations for blog posts. Below, I will explain every concept and give you commented code step-by-step.
-
+We will build a **Blog App** with user authentication (login, signup) and CRUD (Create, Read, Update, Delete) operations for blog posts. 
 ---
 
 ### **Basic Concepts: What You Need to Know**
@@ -494,7 +493,5 @@ This is a full-stack blog application built with **Next.js** for the frontend an
 
 5. Visit `http://localhost:3000` to view the application.
 
-## License
-MIT
 ```
 
